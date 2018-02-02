@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React, { Component } from 'react';
+import React from 'react';
 
 const propTypes = {
 	clearFilterText: PropTypes.string.isRequired,
@@ -10,7 +10,7 @@ const propTypes = {
 	value: PropTypes.string.isRequired
 };
 
-export default class Filter extends Component {
+export default class Filter extends React.Component {
 	constructor(props) {
 		super(props);
 

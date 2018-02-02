@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React, { Component } from 'react';
+import React from 'react';
 import classNames from 'classnames';
 
 const propTypes = {
@@ -18,7 +18,7 @@ const defaultProps = {
 	label: ''
 };
 
-export default class ListItem extends Component {
+export default class ListItem extends React.Component {
 	constructor(props) {
 		super(props);
 

@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React from 'react';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import {filterByName} from './utils';
@@ -52,7 +52,7 @@ const defaultProps = {
 	valueKey: 'value'
 };
 
-export default class MultiselectTwoSides extends Component {
+export default class MultiselectTwoSides extends React.Component {
 	constructor(props) {
 		super(props);
 

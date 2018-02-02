@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React, { Component } from 'react';
+import React from 'react';
 import ListItem from './ListItem'
 
 const propTypes = {
@@ -10,7 +10,7 @@ const propTypes = {
 	valueKey: PropTypes.string.isRequired
 }
 
-export default class List extends Component {
+export default class List extends React.Component {
 	constructor(props) {
 		super(props);
 

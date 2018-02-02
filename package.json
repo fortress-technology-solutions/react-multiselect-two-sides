@@ -12,7 +12,7 @@
   "scripts": {
     "build": "npm run build:lib && npm run build:dist",
     "build:lib": "cross-env NODE_ENV=production babel src --out-dir lib",
-    "build:dist": "cross-env NODE_ENV=production webpack -p",
+    "build:dist": "cross-env NODE_ENV=production webpack",
     "build:example": "cross-env NODE_ENV=production webpack -p",
     "start": "webpack --watch",
     "test": "eslint index.jsx test/*.js test/**/*.js webpack.config.js example/app.jsx && ava --verbose",
