@@ -8,7 +8,8 @@ module.exports = {
 	],
 	output: {
 		path: path.resolve(__dirname, 'dist'),
-		filename: 'index.js'
+		filename: 'index.js',
+		libraryTarget: 'commonjs2'
 	},
 	module: {
 		rules: [
@@ -38,24 +39,7 @@ module.exports = {
 		]
 	},
 	externals: {
-		react: {
-			root: 'React',
-			commonjs2: 'react',
-			commonjs: 'react',
-			amd: 'react'
-		},
-		'react-dom': {
-			root: 'ReactDOM',
-			commonjs2: 'react-dom',
-			commonjs: 'react-dom',
-			amd: 'react-dom'
-		},
-		'prop-types': {
-			root: 'PropTypes',
-			commonjs2: 'prop-types',
-			commonjs: 'prop-types',
-			amd: 'prop-types'
-		}
+		react: 'commonjs react'
 	},
 	devtool: 'eval',
 	resolve: {
@@ -63,6 +47,5 @@ module.exports = {
 			path.resolve(__dirname, 'node_modules')
 		],
 		extensions: ['.js', '.jsx']
-	},
-	target: 'web'
+	}
 };
