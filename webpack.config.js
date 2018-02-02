@@ -4,11 +4,11 @@ const autoprefixer = require('autoprefixer');
 
 module.exports = {
 	entry: [
-		'./example/app.jsx'
+		'./src/index.jsx'
 	],
 	output: {
-		path: path.resolve(__dirname, 'example'),
-		filename: 'bundle.js'
+		path: path.resolve(__dirname, 'dist'),
+		filename: 'index.js'
 	},
 	module: {
 		rules: [
@@ -48,5 +48,6 @@ module.exports = {
 			path.resolve(__dirname, 'node_modules')
 		],
 		extensions: ['.js', '.jsx']
-	}
+	},
+	target: 'web'
 };
