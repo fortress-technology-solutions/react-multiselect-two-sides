@@ -4,7 +4,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
-import MultiselectTwoSides from '../index';
+import MultiselectTwoSides from '../src/index';
 
 require('../style.css');
 require('./style.css');

@@ -39,7 +39,7 @@ module.exports = {
 		]
 	},
 	externals: {
-		react: 'commonjs react'
+		react: 'react'
 	},
 	devtool: 'eval',
 	resolve: {
