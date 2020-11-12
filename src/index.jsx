@@ -1,9 +1,9 @@
-import React from 'react';
-import classNames from 'classnames';
-import PropTypes from 'prop-types';
-import {filterByName} from './utils';
-import Filter from './Filter';
-import List from './List';
+import React from "react";
+import classNames from "classnames";
+import PropTypes from "prop-types";
+import { filterByName } from "./utils";
+import Filter from "./Filter";
+import List from "./List";
 
 const propTypes = {
 	availableFooter: PropTypes.node,
@@ -26,30 +26,30 @@ const propTypes = {
 	selectedHeader: PropTypes.node,
 	showControls: PropTypes.bool,
 	value: PropTypes.array,
-	valueKey: PropTypes.string
+	valueKey: PropTypes.string,
 };
 const defaultProps = {
 	availableFooter: null,
 	availableHeader: null,
 	className: null,
-	clearFilterText: 'Clear',
+	clearFilterText: "Clear",
 	clearable: true,
-	deselectAllText: 'Deselect all',
+	deselectAllText: "Deselect all",
 	disabled: false,
 	filterComponent: null,
 	highlight: [],
-	labelKey: 'label',
+	labelKey: "label",
 	limit: undefined,
 	onChange: () => {},
 	options: [],
-	placeholder: '',
+	placeholder: "",
 	searchable: false,
-	selectAllText: 'Select all',
+	selectAllText: "Select all",
 	selectedFooter: null,
 	selectedHeader: null,
 	showControls: false,
 	value: [],
-	valueKey: 'value'
+	valueKey: "value",
 };
 
 export default class MultiselectTwoSides extends React.Component {
@@ -57,16 +57,20 @@ export default class MultiselectTwoSides extends React.Component {
 		super(props);
 
 		this.state = {
-			filterAvailable: '',
-			filterSelected: ''
+			filterAvailable: "",
+			filterSelected: "",
 		};
 
 		this.handleClickAvailable = this.handleClickAvailable.bind(this);
 		this.handleClickSelected = this.handleClickSelected.bind(this);
 		this.handleClickSelectAll = this.handleClickSelectAll.bind(this);
 		this.handleClickDeselectAll = this.handleClickDeselectAll.bind(this);
-		this.handleChangeFilterAvailable = this.handleChangeFilterAvailable.bind(this);
-		this.handleChangeFilterSelected = this.handleChangeFilterSelected.bind(this);
+		this.handleChangeFilterAvailable = this.handleChangeFilterAvailable.bind(
+			this
+		);
+		this.handleChangeFilterSelected = this.handleChangeFilterSelected.bind(
+			this
+		);
 	}
 
 	handleClickAvailable(value) {
@@ -74,10 +78,7 @@ export default class MultiselectTwoSides extends React.Component {
 	}
 
 	handleClickSelected(value) {
-		const {
-			onChange,
-			value: currentValue
-		} = this.props;
+		const { onChange, value: currentValue } = this.props;
 		const newValue = currentValue.slice();
 
 		newValue.splice(currentValue.indexOf(value), 1);
@@ -85,15 +86,9 @@ export default class MultiselectTwoSides extends React.Component {
 	}
 
 	handleClickSelectAll() {
-		const {
-			limit,
-			onChange,
-			options,
-			value,
-			valueKey
-		} = this.props;
+		const { limit, onChange, options, value, valueKey } = this.props;
 		const previousValue = value.slice();
-
+		const options = this.filterAvailable();
 		const newValue = options.reduce((a, b) => {
 			if (!b.disabled && previousValue.indexOf(b[valueKey]) === -1) {
 				a.push(b[valueKey]);
@@ -112,18 +107,30 @@ export default class MultiselectTwoSides extends React.Component {
 	}
 
 	handleClickDeselectAll() {
-		this.props.onChange([]);
+		const { onChange, value, valueKey } = this.props;
+		const previousValue = value.slice();
+
+		const options = this.filterActive();
+
+		const optionsValueMap = options.reduce((acc, option) => {
+			acc[option[valueKey]] = true;
+
+			return acc;
+		}, {});
+
+		const newValue = previousValue.reduce((acc, value) => {
+			if (!optionsValueMap[value]) {
+				acc.push(value);
+			}
+
+			return acc;
+		}, []);
+
+		onChange(newValue);
 	}
 
 	filterAvailable() {
-		const {
-			highlight,
-			labelKey,
-			limit,
-			options,
-			value,
-			valueKey
-		} = this.props;
+		const { highlight, labelKey, limit, options, value, valueKey } = this.props;
 		const filtered = options.reduce((a, b) => {
 			if (value.indexOf(b[valueKey]) === -1) {
 				a.push(b);
@@ -133,15 +140,15 @@ export default class MultiselectTwoSides extends React.Component {
 
 		let limited = filtered;
 		if (value.length >= limit) {
-			limited = filtered.map(item => {
-				return Object.assign({}, item, {disabled: true});
+			limited = filtered.map((item) => {
+				return Object.assign({}, item, { disabled: true });
 			});
 		}
 
 		if (highlight && highlight.length > 0) {
-			limited = limited.map(item => {
+			limited = limited.map((item) => {
 				if (highlight.indexOf(item[valueKey]) > -1) {
-					return Object.assign({}, item, {highlighted: true});
+					return Object.assign({}, item, { highlighted: true });
 				}
 				return item;
 			});
@@ -151,23 +158,16 @@ export default class MultiselectTwoSides extends React.Component {
 			return limited;
 		}
 
-		const {
-			filterAvailable: filter
-		} = this.state;
+		const { filterAvailable: filter } = this.state;
 		if (filter) {
-			return limited.filter(a => (filterByName(a, filter, labelKey)));
+			return limited.filter((a) => filterByName(a, filter, labelKey));
 		}
 
 		return limited;
 	}
 
 	filterActive() {
-		const {
-			labelKey,
-			options,
-			value,
-			valueKey
-		} = this.props;
+		const { labelKey, options, value, valueKey } = this.props;
 		const filtered = options.reduce((a, b) => {
 			if (value.indexOf(b[valueKey]) > -1) {
 				a.push(b);
@@ -179,20 +179,20 @@ export default class MultiselectTwoSides extends React.Component {
 			return filtered;
 		}
 
-		const {filterSelected: filter} = this.state;
+		const { filterSelected: filter } = this.state;
 		if (filter) {
-			return filtered.filter(a => (filterByName(a, filter, labelKey)));
+			return filtered.filter((a) => filterByName(a, filter, labelKey));
 		}
 
 		return filtered;
 	}
 
 	handleChangeFilterAvailable(filterAvailable) {
-		this.setState({filterAvailable});
+		this.setState({ filterAvailable });
 	}
 
 	handleChangeFilterSelected(filterSelected) {
-		this.setState({filterSelected});
+		this.setState({ filterSelected });
 	}
 
 	renderFilter(value, onChange) {
@@ -201,7 +201,7 @@ export default class MultiselectTwoSides extends React.Component {
 			clearable,
 			disabled,
 			filterComponent,
-			placeholder
+			placeholder,
 		} = this.props;
 
 		if (!filterComponent) {
@@ -223,7 +223,7 @@ export default class MultiselectTwoSides extends React.Component {
 			disabled,
 			onChange,
 			placeholder,
-			value
+			value,
 		});
 	}
 
@@ -243,18 +243,21 @@ export default class MultiselectTwoSides extends React.Component {
 			selectedHeader,
 			showControls,
 			value,
-			valueKey
+			valueKey,
 		} = this.props;
 
-		const {
-			filterAvailable,
-			filterSelected
-		} = this.state;
+		const { filterAvailable, filterSelected } = this.state;
 
-		const componentClassName = 'msts';
+		const componentClassName = "msts";
 
 		return (
-			<div className={classNames(componentClassName, disabled && `${componentClassName}_disabled`, className)}>
+			<div
+				className={classNames(
+					componentClassName,
+					disabled && `${componentClassName}_disabled`,
+					className
+				)}
+			>
 				{availableHeader || selectedHeader ? (
 					<div className="msts__heading">
 						<div className="msts__side msts__side_available">
@@ -270,11 +273,17 @@ export default class MultiselectTwoSides extends React.Component {
 				{searchable ? (
 					<div className="msts__subheading">
 						<div className="msts__side msts__side_filter">
-							{this.renderFilter(filterAvailable, this.handleChangeFilterAvailable)}
+							{this.renderFilter(
+								filterAvailable,
+								this.handleChangeFilterAvailable
+							)}
 						</div>
 
 						<div className="msts__side msts__side_filter">
-							{this.renderFilter(filterSelected, this.handleChangeFilterSelected)}
+							{this.renderFilter(
+								filterSelected,
+								this.handleChangeFilterSelected
+							)}
 						</div>
 					</div>
 				) : null}
@@ -297,7 +306,11 @@ export default class MultiselectTwoSides extends React.Component {
 								onClick={this.handleClickSelectAll}
 								title={selectAllText}
 								type="button"
-								disabled={value.length === options.length || value.length >= limit || disabled}
+								disabled={
+									value.length === options.length ||
+									value.length >= limit ||
+									disabled
+								}
 							/>
 
 							<button
