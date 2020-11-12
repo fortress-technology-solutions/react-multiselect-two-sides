@@ -119,7 +119,7 @@ export default class MultiselectTwoSides extends React.Component {
 		}, {});
 
 		const newValue = previousValue.reduce((acc, value) => {
-			if (!optionsValueMap[value]) {
+			if (!optionsValueMap[value] || !optionsValueMap[value].disabled) {
 				acc.push(value);
 			}
 
