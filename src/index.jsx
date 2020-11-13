@@ -1,7 +1,7 @@
 import React from "react";
 import classNames from "classnames";
 import PropTypes from "prop-types";
-import { filterByName } from "./utils";
+import { filterBy } from "./utils";
 import Filter from "./Filter";
 import List from "./List";
 
@@ -13,6 +13,7 @@ const propTypes = {
 	clearable: PropTypes.bool,
 	deselectAllText: PropTypes.string,
 	disabled: PropTypes.bool,
+	filterBy: PropTypes.func,
 	filterComponent: PropTypes.func,
 	highlight: PropTypes.array,
 	labelKey: PropTypes.string,
@@ -36,6 +37,7 @@ const defaultProps = {
 	clearable: true,
 	deselectAllText: "Deselect all",
 	disabled: false,
+	filterBy: filterBy,
 	filterComponent: null,
 	highlight: [],
 	labelKey: "label",
@@ -86,7 +88,7 @@ export default class MultiselectTwoSides extends React.Component {
 	}
 
 	handleClickSelectAll() {
-		const { limit, onChange, options, value, valueKey } = this.props;
+		const { limit, onChange, value, valueKey } = this.props;
 		const previousValue = value.slice();
 		const options = this.filterAvailable();
 		const newValue = options.reduce((a, b) => {
@@ -119,7 +121,7 @@ export default class MultiselectTwoSides extends React.Component {
 		}, {});
 
 		const newValue = previousValue.reduce((acc, value) => {
-			if (!optionsValueMap[value] || !optionsValueMap[value].disabled) {
+			if (!optionsValueMap[value]) {
 				acc.push(value);
 			}
 
@@ -130,7 +132,16 @@ export default class MultiselectTwoSides extends React.Component {
 	}
 
 	filterAvailable() {
-		const { highlight, labelKey, limit, options, value, valueKey } = this.props;
+		const {
+			highlight,
+			labelKey,
+			limit,
+			options,
+			value,
+			valueKey,
+			searchable,
+			filterBy,
+		} = this.props;
 		const filtered = options.reduce((a, b) => {
 			if (value.indexOf(b[valueKey]) === -1) {
 				a.push(b);
@@ -154,20 +165,20 @@ export default class MultiselectTwoSides extends React.Component {
 			});
 		}
 
-		if (!this.props.searchable) {
+		if (!searchable) {
 			return limited;
 		}
 
 		const { filterAvailable: filter } = this.state;
 		if (filter) {
-			return limited.filter((a) => filterByName(a, filter, labelKey));
+			return limited.filter((a) => filterBy(a, filter, labelKey));
 		}
 
 		return limited;
 	}
 
 	filterActive() {
-		const { labelKey, options, value, valueKey } = this.props;
+		const { labelKey, options, value, valueKey, filterBy } = this.props;
 		const filtered = options.reduce((a, b) => {
 			if (value.indexOf(b[valueKey]) > -1) {
 				a.push(b);
@@ -181,7 +192,7 @@ export default class MultiselectTwoSides extends React.Component {
 
 		const { filterSelected: filter } = this.state;
 		if (filter) {
-			return filtered.filter((a) => filterByName(a, filter, labelKey));
+			return filtered.filter((a) => filterBy(a, filter, labelKey));
 		}
 
 		return filtered;
@@ -248,15 +259,9 @@ export default class MultiselectTwoSides extends React.Component {
 
 		const { filterAvailable, filterSelected } = this.state;
 
-		const componentClassName = "msts";
-
 		return (
 			<div
-				className={classNames(
-					componentClassName,
-					disabled && `${componentClassName}_disabled`,
-					className
-				)}
+				className={classNames("msts", disabled && "msts_disabled", className)}
 			>
 				{availableHeader || selectedHeader ? (
 					<div className="msts__heading">

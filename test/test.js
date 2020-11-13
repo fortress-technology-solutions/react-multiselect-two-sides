@@ -408,6 +408,32 @@ test("limit list selectall", (t) => {
 	selectAll.simulate("click");
 	t.deepEqual(value, [0, 2, 4]);
 });
+test("custom `filterBy` property", (t) => {
+	const props = {
+		searchable: true,
+		// Custom case-sensitive filter for test
+		filterBy: (item, filter, labelKey) => item[labelKey].indexOf(filter) > -1,
+		options: [
+			{ label: "Foo", value: 0 },
+			{ label: "foo", value: 1 },
+			{ label: "Bar", value: 2 },
+			{ label: "bar", value: 3 },
+		],
+		value: [2, 3],
+	};
+	const wrapper = mount(<C {...props} />);
+	const filters = wrapper.find(".msts__filter-input");
+
+	filters.at(0).simulate("change", { target: { value: "Fo" } });
+	const available = wrapper.find(".msts__side_available");
+	t.is(available.find(".msts__list-item").length, 1);
+	t.is(available.find(".msts__list-item").text(), "Foo");
+
+	filters.at(1).simulate("change", { target: { value: "Ba" } });
+	const selected = wrapper.find(".msts__side_selected");
+	t.is(selected.find(".msts__list-item").length, 1);
+	t.is(selected.find(".msts__list-item").text(), "Bar");
+});
 test("selectall filtered items only", (t) => {
 	let value = [];
 	const props = {
