@@ -21,8 +21,7 @@ test('allow to add custom class name', t => {
 });
 
 test('render children blocks', t => {
-	const props = {
-	};
+	const props = {};
 	const wrapper = shallow(<C {...props}/>);
 	t.true(wrapper.find('.msts__side').length === 2);
 
@@ -90,7 +89,11 @@ test('render filter clear', t => {
 	const wrapper = mount(<C {...props}/>);
 	const filters = wrapper.find('.msts__filter-input');
 
-	t.is(wrapper.find('.msts__filter-clear').length, 0, 'dont render if filter is empty');
+	t.is(
+		wrapper.find('.msts__filter-clear').length,
+		0,
+		'dont render if filter is empty'
+	);
 
 	filters.at(0).simulate('change', {target: {value: 'foo'}});
 	t.is(wrapper.find('.msts__filter-clear').length, 1);
@@ -147,7 +150,11 @@ test('`disabled`: disable filter', t => {
 	filters.at(0).simulate('change', {target: {value: 'foo'}});
 	filters.at(1).simulate('change', {target: {value: 'foo'}});
 
-	t.is(wrapper.find('.msts__filter-clear').length, 0, 'dont render clear buttons');
+	t.is(
+		wrapper.find('.msts__filter-clear').length,
+		0,
+		'dont render clear buttons'
+	);
 });
 
 test('`disabled`: disable component', t => {
@@ -162,9 +169,7 @@ test('`disabled`: disable handle', t => {
 	let isChanged = false;
 	const props = {
 		disabled: true,
-		options: [
-			{label: 'Foo', value: 0}
-		],
+		options: [{label: 'Foo', value: 0}],
 		onChange() {
 			isChanged = true;
 		}
@@ -178,9 +183,7 @@ test('`disabled`: disable handle', t => {
 test('`disabled`: disable option', t => {
 	let isChanged = false;
 	const props = {
-		options: [
-			{label: 'Foo', value: 0, disabled: true}
-		],
+		options: [{label: 'Foo', value: 0, disabled: true}],
 		onChange() {
 			isChanged = true;
 		}
@@ -211,6 +214,28 @@ test('dont select disabled option by select all', t => {
 	t.deepEqual(value, [1]);
 });
 
+test('dont deselect disabled values', t => {
+	let value = [];
+	const props = {
+		showControls: true,
+		options: [
+			{label: 'Foo', value: 0},
+			{label: 'Bar', value: 1, disabled: true},
+			{label: 'Baz', value: 2},
+			{label: 'Qux', value: 3},
+			{label: 'Quux', value: 4}
+		],
+		value: [1, 3, 4],
+		onChange(newValue) {
+			value = newValue;
+		}
+	};
+	const wrapper = mount(<C {...props}/>);
+	const deselectall = wrapper.find('.msts__control_deselect-all');
+	deselectall.simulate('click');
+	t.deepEqual(value, [1]);
+});
+
 test('`highlight`: highlight option', t => {
 	const props = {
 		options: [
@@ -222,7 +247,10 @@ test('`highlight`: highlight option', t => {
 	const wrapper = mount(<C {...props}/>);
 	const items = wrapper.find('.msts__list-item');
 	t.is(items.at(0).props().className, 'msts__list-item');
-	t.is(items.at(1).props().className, 'msts__list-item msts__list-item_highlighted');
+	t.is(
+		items.at(1).props().className,
+		'msts__list-item msts__list-item_highlighted'
+	);
 });
 
 test('prop clearFilterText', t => {
@@ -311,9 +339,7 @@ test('prop labelKey and valueKey filterAvailable', t => {
 		labelKey: 'foo',
 		valueKey: 'bar',
 		searchable: true,
-		options: [
-			{foo: 'Foo', bar: 3}
-		]
+		options: [{foo: 'Foo', bar: 3}]
 	};
 	const wrapper = mount(<C {...props}/>);
 	const filters = wrapper.find('.msts__filter-input');
@@ -332,9 +358,7 @@ test('prop labelKey and valueKey filterSelected', t => {
 		labelKey: 'foo',
 		valueKey: 'bar',
 		searchable: true,
-		options: [
-			{foo: 'Foo', bar: 3}
-		],
+		options: [{foo: 'Foo', bar: 3}],
 		value: [3]
 	};
 	const wrapper = mount(<C {...props}/>);
@@ -371,9 +395,15 @@ test('limit list', t => {
 
 	items.at(0).simulate('click');
 
-	t.is(items.at(0).props().className, 'msts__list-item msts__list-item_disabled');
+	t.is(
+		items.at(0).props().className,
+		'msts__list-item msts__list-item_disabled'
+	);
 	t.is(items.at(0).text(), 'Qux');
-	t.is(items.at(1).props().className, 'msts__list-item msts__list-item_disabled');
+	t.is(
+		items.at(1).props().className,
+		'msts__list-item msts__list-item_disabled'
+	);
 	t.is(items.at(1).text(), 'Quux');
 	t.false(isChanged);
 });

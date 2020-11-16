@@ -74,10 +74,7 @@ export default class MultiselectTwoSides extends React.Component {
 	}
 
 	handleClickSelected(value) {
-		const {
-			onChange,
-			value: currentValue
-		} = this.props;
+		const {onChange, value: currentValue} = this.props;
 		const newValue = currentValue.slice();
 
 		newValue.splice(currentValue.indexOf(value), 1);
@@ -85,13 +82,7 @@ export default class MultiselectTwoSides extends React.Component {
 	}
 
 	handleClickSelectAll() {
-		const {
-			limit,
-			onChange,
-			options,
-			value,
-			valueKey
-		} = this.props;
+		const {limit, onChange, options, value, valueKey} = this.props;
 		const previousValue = value.slice();
 
 		const newValue = options.reduce((a, b) => {
@@ -112,18 +103,22 @@ export default class MultiselectTwoSides extends React.Component {
 	}
 
 	handleClickDeselectAll() {
-		this.props.onChange([]);
+		const {options, onChange, valueKey, value} = this.props;
+		const newValue = options.reduce((accum, option) => {
+			if (
+				option.disabled &&
+				value.indexOf(option[valueKey]) !== -1
+			) {
+			accum.push(option[valueKey]);
+			}
+			return accum;
+		}, []);
+
+		onChange(newValue);
 	}
 
 	filterAvailable() {
-		const {
-			highlight,
-			labelKey,
-			limit,
-			options,
-			value,
-			valueKey
-		} = this.props;
+		const {highlight, labelKey, limit, options, value, valueKey} = this.props;
 		const filtered = options.reduce((a, b) => {
 			if (value.indexOf(b[valueKey]) === -1) {
 				a.push(b);
@@ -151,23 +146,16 @@ export default class MultiselectTwoSides extends React.Component {
 			return limited;
 		}
 
-		const {
-			filterAvailable: filter
-		} = this.state;
+		const {filterAvailable: filter} = this.state;
 		if (filter) {
-			return limited.filter(a => (filterByName(a, filter, labelKey)));
+			return limited.filter(a => filterByName(a, filter, labelKey));
 		}
 
 		return limited;
 	}
 
 	filterActive() {
-		const {
-			labelKey,
-			options,
-			value,
-			valueKey
-		} = this.props;
+		const {labelKey, options, value, valueKey} = this.props;
 		const filtered = options.reduce((a, b) => {
 			if (value.indexOf(b[valueKey]) > -1) {
 				a.push(b);
@@ -181,7 +169,7 @@ export default class MultiselectTwoSides extends React.Component {
 
 		const {filterSelected: filter} = this.state;
 		if (filter) {
-			return filtered.filter(a => (filterByName(a, filter, labelKey)));
+			return filtered.filter(a => filterByName(a, filter, labelKey));
 		}
 
 		return filtered;
@@ -208,11 +196,11 @@ export default class MultiselectTwoSides extends React.Component {
 			return (
 				<Filter
 					value={value}
-					onChange={onChange}
 					clearFilterText={clearFilterText}
 					clearable={clearable}
 					disabled={disabled}
 					placeholder={placeholder}
+					onChange={onChange}
 				/>
 			);
 		}
@@ -246,15 +234,18 @@ export default class MultiselectTwoSides extends React.Component {
 			valueKey
 		} = this.props;
 
-		const {
-			filterAvailable,
-			filterSelected
-		} = this.state;
+		const {filterAvailable, filterSelected} = this.state;
 
 		const componentClassName = 'msts';
 
 		return (
-			<div className={classNames(componentClassName, disabled && `${componentClassName}_disabled`, className)}>
+			<div
+				className={classNames(
+					componentClassName,
+					disabled && `${componentClassName}_disabled`,
+					className
+				)}
+			>
 				{availableHeader || selectedHeader ? (
 					<div className="msts__heading">
 						<div className="msts__side msts__side_available">
@@ -270,11 +261,17 @@ export default class MultiselectTwoSides extends React.Component {
 				{searchable ? (
 					<div className="msts__subheading">
 						<div className="msts__side msts__side_filter">
-							{this.renderFilter(filterAvailable, this.handleChangeFilterAvailable)}
+							{this.renderFilter(
+								filterAvailable,
+								this.handleChangeFilterAvailable
+							)}
 						</div>
 
 						<div className="msts__side msts__side_filter">
-							{this.renderFilter(filterSelected, this.handleChangeFilterSelected)}
+							{this.renderFilter(
+								filterSelected,
+								this.handleChangeFilterSelected
+							)}
 						</div>
 					</div>
 				) : null}
@@ -283,10 +280,10 @@ export default class MultiselectTwoSides extends React.Component {
 					<div className="msts__side msts__side_available">
 						<List
 							options={this.filterAvailable()}
-							onClick={this.handleClickAvailable}
 							disabled={disabled}
 							labelKey={labelKey}
 							valueKey={valueKey}
+							onClick={this.handleClickAvailable}
 						/>
 					</div>
 
@@ -294,18 +291,22 @@ export default class MultiselectTwoSides extends React.Component {
 						<div className="msts__side msts__side_controls">
 							<button
 								className="msts__control msts__control_select-all"
-								onClick={this.handleClickSelectAll}
 								title={selectAllText}
 								type="button"
-								disabled={value.length === options.length || value.length >= limit || disabled}
+								disabled={
+									value.length === options.length ||
+									value.length >= limit ||
+									disabled
+								}
+								onClick={this.handleClickSelectAll}
 							/>
 
 							<button
 								className="msts__control msts__control_deselect-all"
-								onClick={this.handleClickDeselectAll}
 								title={deselectAllText}
 								type="button"
 								disabled={!value.length || disabled}
+								onClick={this.handleClickDeselectAll}
 							/>
 						</div>
 					) : null}
@@ -313,10 +314,10 @@ export default class MultiselectTwoSides extends React.Component {
 					<div className="msts__side msts__side_selected">
 						<List
 							options={this.filterActive()}
-							onClick={this.handleClickSelected}
 							disabled={disabled}
 							labelKey={labelKey}
 							valueKey={valueKey}
+							onClick={this.handleClickSelected}
 						/>
 					</div>
 				</div>
