@@ -1,15 +1,10 @@
 {
   "name": "@fortress-technology-solutions/react-multiselect-two-sides",
-  "version": "0.13.1",
+  "version": "0.13.2",
   "private": false,
   "description": "React multiselect two sides component",
   "license": "MIT",
-  "repository": "VovanR/react-multiselect-two-sides",
-  "author": {
-    "name": "Vladimir Rodkin",
-    "email": "mail@vovanr.com",
-    "url": "https://github.com/VovanR"
-  },
+  "repository": "fortress-technology-solutions/react-multiselect-two-sides",
   "scripts": {
     "build": "npm run build:lib && npm run build:dist",
     "build:lib": "cross-env NODE_ENV=production babel src --out-dir lib",
