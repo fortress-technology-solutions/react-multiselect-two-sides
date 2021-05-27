@@ -1,6 +1,7 @@
 {
-  "name": "react-multiselect-two-sides",
+  "name": "@fortress-technology-solutions/react-multiselect-two-sides",
   "version": "0.13.1",
+  "private": false,
   "description": "React multiselect two sides component",
   "license": "MIT",
   "repository": "VovanR/react-multiselect-two-sides",
@@ -39,10 +40,9 @@
     "input"
   ],
   "dependencies": {
-    "babel": "^6.23.0",
-    "classnames": "^2.2.5",
+    "classnames": "*",
     "git": "^0.1.5",
-    "prop-types": "^15.6.0"
+    "prop-types": "*"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.6",
